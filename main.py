@@ -20,7 +20,6 @@ LABELS_PATH = config.get("LABELS_PATH", "face_labels.pkl")
 FAISS_INDEX_PATH = config.get("FAISS_INDEX_PATH", "faiss_index.bin")
 NUM_WORKERS = config.get("NUM_WORKERS", mp.cpu_count() - 1 or 1)
 
-# === Initialize InsightFace ===
 app = FaceAnalysis(providers=['DmlExecutionProvider', 'CPUExecutionProvider'])
 app.prepare(ctx_id=0, det_size=(640, 640))
 
