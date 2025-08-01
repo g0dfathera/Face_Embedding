@@ -1,0 +1,13 @@
+opencv-python
+numpy
+faiss-cpu
+insightface
+pillow
+tqdm
+tkinter
+cv2
+json
+pickle
+faiss
+PIL
+sqlite3
