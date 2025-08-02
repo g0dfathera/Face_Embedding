@@ -162,13 +162,16 @@ class FaceSearchApp:
             else:
                 photo_label.config(text="[No Image]", width=12, background="gray", foreground="white", anchor="center", font=("Arial", 9, "italic"))
 
+            # Convert similarity to percentage:
+            similarity_pct = dist * 100
+
             info_text = (
                 f"Rank: {rank}\n"
                 f"Name: {first} {last}\n"
                 f"Date of Birth: {dob}\n"
                 f"District: {district}\n"
                 f"Region: {region}\n"
-                f"Similarity: {dist:.4f}"
+                f"Similarity: {similarity_pct:.2f}%"
             )
             info_label = ttk.Label(frame, text=info_text, justify=tk.LEFT, anchor="w", font=("Arial", 10))
             info_label.pack(side=tk.LEFT, padx=10, pady=5)
