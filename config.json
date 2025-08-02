@@ -4,5 +4,5 @@
   "EMBEDDINGS_PATH": "face_embeddings.npy",
   "LABELS_PATH": "face_labels.pkl",
   "FAISS_INDEX_PATH": "faiss_index.bin",
-  "NUM_WORKERS": 7
+  "NUM_WORKERS": 1
 }
