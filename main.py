@@ -30,7 +30,7 @@ def extract_embedding(rgb_img):
     return faces[0].embedding
 
 def worker(row):
-    num, name, blob = row
+    num, blob = row  # removed name
     img_array = np.frombuffer(blob, dtype=np.uint8)
     img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
     if img is None:
@@ -39,18 +39,18 @@ def worker(row):
     embedding = extract_embedding(rgb_img)
     if embedding is None:
         return None
-    return (embedding, name)
+    return (embedding, num)  # return num instead of name, YOU SHOULD CHANGE IT BASED ON WHAT CRITERIUM YOU NEED FROM DATABASE - FOR EXAMPLE - ID NUMBER
 
 def load_db_batch(offset, limit):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT p.id, p.full_name, i.image_blob
-        FROM people p
-        JOIN images i ON p.id = i.person_id
+        SELECT p.num, i.image_blob
+        FROM dbos_person p
+        JOIN dbos_images i ON p.num = i.num
         WHERE i.image_blob IS NOT NULL
         LIMIT ? OFFSET ?;
-    """, (limit, offset))
+    """, (limit, offset)) # Change this based on your database - you can use database_structure_parser.py I provided to get info about structure of database
     rows = cursor.fetchall()
     cursor.close()
     conn.close()
