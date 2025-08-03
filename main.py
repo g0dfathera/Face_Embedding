@@ -80,28 +80,6 @@ def build_faiss_index():
     faiss.write_index(index, FAISS_INDEX_PATH)
     print(f"[+] FAISS index saved to {FAISS_INDEX_PATH}")
 
-def search_face(image_path, top_k=5):
-    img = cv2.imread(image_path)
-    if img is None:
-        print("[!] Could not read image.")
-        return
-    rgb_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    embedding = extract_embedding(rgb_img)
-    if embedding is None:
-        print("[!] No face or multiple faces detected.")
-        return
-
-    embedding = embedding.astype('float32').reshape(1, -1)
-    faiss.normalize_L2(embedding)
-
-    index = faiss.read_index(FAISS_INDEX_PATH)
-    labels = pickle.load(open(LABELS_PATH, "rb"))
-
-    distances, indices = index.search(embedding, top_k)
-    print(f"Top {top_k} matches:")
-    for dist, idx in zip(distances[0], indices[0]):
-        print(f"Name: {labels[idx]}, Similarity: {dist:.4f}")
-
 def main():
     offset = 0
 
@@ -125,20 +103,11 @@ def main():
         embeddings = np.array(embeddings, dtype='float32')
 
         save_progress(embeddings, list(labels))
-
         offset += BATCH_SIZE
 
     print("\n[+] All batches processed. Building FAISS index...")
     build_faiss_index()
-
-    while True:
-        query_path = input("\nEnter path to photo to identify (or 'exit' to quit): ").strip()
-        if query_path.lower() == "exit":
-            break
-        if not os.path.exists(query_path):
-            print("[!] File does not exist.")
-            continue
-        search_face(query_path)
+    print("[+] Done.")
 
 if __name__ == "__main__":
     main()
